@@ -1,0 +1,23 @@
+{
+  "name": "e-com-api",
+  "version": "1.0.0",
+  "description": "REST API for E-COM Api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnantGupta11/E-COM-API.git"
+  },
+  "author": "Anant Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnantGupta11/E-COM-API/issues"
+  },
+  "homepage": "https://github.com/AnantGupta11/E-COM-API#readme",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
