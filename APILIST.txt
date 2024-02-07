@@ -4,3 +4,10 @@ Add a Products
 gate one Products
 Rate Products
 filter product
+Rate Product
+Add items to cart
+Remove items from cart
+
+UserController
+Signup - Email, Name, Password, type of user(customer,seller)
+SignIn - (Email,Password)

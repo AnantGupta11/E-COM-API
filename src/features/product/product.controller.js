@@ -21,6 +21,20 @@ export default class ProductController{
 
     }
     getOneProduct(req,res){
-        
+        const id=req.params.id;
+        const product=ProductModel.getOneProduct(id);
+        if(!product){
+            res.status(404).send("Product not found");
+        }else{
+            return res.status(200).send(product);
+        }
+    }
+
+    filterProduct(req,res){
+        const minPrice=req.query.minPrice;
+        const maxPrice=req.query.maxPrice;
+        const category=req.query.category;
+        const result=ProductModel.filter(minPrice,maxPrice,category);
+        res.status(200).send(result);
     }
 }
