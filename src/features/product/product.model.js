@@ -1,3 +1,5 @@
+import UserModel from "../user/user.model.js";
+
 export default class ProductModel{
     constructor(id, name, desc, price, imageUrl, category, sizes){
         this.id=id;
@@ -35,6 +37,12 @@ export default class ProductModel{
     });
     return result;
     }
+
+    static rateProduct(userID,productID,rating){
+      //1. validating user and product
+      UserModel.getAll().find((u)=>u.id==userID);
+    }
+
 } 
 
 var products = [
