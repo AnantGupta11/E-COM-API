@@ -40,7 +40,35 @@ export default class ProductModel{
 
     static rateProduct(userID,productID,rating){
       //1. validating user and product
-      UserModel.getAll().find((u)=>u.id==userID);
+      const user=UserModel.getAll().find((u)=>u.id==userID);
+      if(!user){
+        return "User not found";
+      }
+
+      // validating product
+      const product=products.find((p)=>p.id==productID);
+      if(!product){
+        return "Product not found";
+      }
+
+      //2. check if there are any rating and if not then add ratings array
+      if(!product.ratings){
+        product.ratings=[];
+        product.ratings.push({userID:userID, rating:rating});
+      }else{
+        //check if user rating already given
+        const existingRatingIndex = product.ratings.findIndex(r=>r.userID==userID);
+        if(existingRatingIndex >=0){
+          product.ratings[existingRatingIndex]={
+            userID:userID, rating:rating
+          }
+        }else{
+
+          //if no existing rating then add rating
+          products.ratings.push({userID:userID, rating:rating});
+        }
+      }
+
     }
 
 } 
