@@ -9,6 +9,7 @@ import jwtAuth from './src/middlewares/jwt.middleware.js';
 import cartRouter from './src/features/cartItems/cartItem.routes.js';
 import apiDocs from './swagger.json' assert {type:'json'};
 import loggerMiddleware from './src/middlewares/logger.middleware.js';
+import { ApplicationError } from './src/error-handler/applicationError.js';
 
 // 2. Create Server
 const server = express();
@@ -38,6 +39,18 @@ server.use('/api/cartItems',jwtAuth, cartRouter);
 server.get('/', (req, res) => {
   res.send('Welcome to Ecommerce APIs');
 });
+
+//Error handler middleware
+server.use((err,req,res,next)=>{
+  console.log(err);
+  if(err instanceof ApplicationError){
+    res.status(err.code).send(err.message);
+  }
+
+  //server errors
+  res.status(500).send("Something went wrong, please try Later");
+
+})
 
 //4. middleware to handle 404 request
 server.use((req,res,next)=>{
