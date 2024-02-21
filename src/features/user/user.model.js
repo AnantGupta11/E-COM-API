@@ -1,31 +1,18 @@
+import { getDB } from "../../config/mongodb.js";
+import { ApplicationError } from "../../error-handler/applicationError.js"; 
+
 export default class UserModel {
     constructor(name, email, password, type, id) {
       this.name = name;
       this.email = email;
       this.password = password;
       this.type = type;
-      this.id = id;
+      this._id = id;
     }
   
-    static signUp(name, email, password, type) {
-      const newUser = new UserModel(
-        name,
-        email,
-        password,
-        type
-      );
-      newUser.id = users.length + 1;
-      users.push(newUser);
-      return newUser;
-    }
+     //removed signup from here and move it to userRepository
   
-    static signIn(email, password) {
-      const user = users.find(
-        (u) =>
-          u.email == email && u.password == password
-      );
-      return user;
-    }
+    //removed signIn
   
     static getAll(){
       return users;

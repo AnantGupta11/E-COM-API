@@ -2,15 +2,21 @@ import { MongoClient } from "mongodb";
 
 const url="mongodb://localhost:27017/ecomdb";
 
-const connectToMongoDB=()=>{
+let client;
+export const connectToMongoDB=()=>{
     MongoClient.connect(url)
-    .then(client=>{
+    .then(clientInstance=>{
+        client=clientInstance
         console.log("MongoDb is connected");
     })
     .catch(err=>{
         console.log(err);
     })
 
+}
+
+export const getDB=()=>{
+    return client.db();
 }
 
 export default connectToMongoDB;
