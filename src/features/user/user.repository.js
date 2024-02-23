@@ -34,6 +34,24 @@ class UserRepository{
             
             //find the document
             return await collection.findOne({email,password});
+
+        }catch(err){
+          console.log(err);
+          throw new ApplicationError("Something went wrong with database",500);
+        }
+        
+    }
+
+    async findByEmail(email) {
+        try{
+          //Get the database
+            const db=getDB();
+  
+            //get the collection
+            const collection=db.collection("users");
+            
+            //find the document
+            return await collection.findOne({email});
             
         }catch(err){
           console.log(err);

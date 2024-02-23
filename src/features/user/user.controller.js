@@ -2,6 +2,7 @@ import { ApplicationError } from "../../error-handler/applicationError.js";
 import UserModel  from "./user.model.js";
 import  Jwt  from "jsonwebtoken";
 import UserRepository from "./user.repository.js";
+import bcrypt from 'bcrypt';
 
 export default class UserController{
     constructor(){
@@ -10,7 +11,8 @@ export default class UserController{
     async signUp(req,res){
         try{
             const {name,email,password,type}=req.body;
-            const user= new UserModel(name,email,password,type);
+            const hashedPassword= await bcrypt.hash(password,12);
+            const user= new UserModel(name,email,hashedPassword,type);
             await this.userRepository.signUp(user);
             res.status(201).send(user);
         }catch(err){
@@ -21,19 +23,28 @@ export default class UserController{
     }
     async signIn(req,res){
         try{
-            const result=await this.userRepository.signIn(
-                req.body.email,
-                req.body.password
-            );
-            if(!result){
-                return res.status(400).send("Incorrect Credentials");
+            const user= await this.userRepository.findByEmail(req.body.email);
+
+            if(!user){
+              return res.status(400)
+              .send("Incorrect Credentials"); 
+               
             }else{
-                //1.create token
-                const token=Jwt.sign({userId: result.id, email:result.email}, "Q0qy^a-ZT%v/!hevhwuOah",{
-                    expiresIn: '1h'
-                });
-                //2.send token
-                res.status(200).send(token);
+                //compare password with hashed password.
+                const result=await bcrypt.compare(req.body.password, user.password);
+
+                if(result){
+                    //1.create token
+                    const token=Jwt.sign({userId: result.id, email:result.email}, "Q0qy^a-ZT%v/!hevhwuOah",{
+                        expiresIn: '1h'
+                    });
+                    //2.send token
+                    res.status(200).send(token);
+
+                }else{
+                    console.log(user.password);
+                    return res.status(400).send("Incorrect Credentials");
+                }
             }
         }catch(err){
             console.log(err);
