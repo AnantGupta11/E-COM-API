@@ -2,17 +2,17 @@ import { getDB } from "../../config/mongodb.js";
 import { ApplicationError } from "../../error-handler/applicationError.js";
 
 class UserRepository{
+  constructor(){
+    this.collection="users";
+}
     async signUp(newUser) {
         try{
           //Get the database
             const db=getDB();
   
             //get the collection
-            const collection=db.collection("users");
+            const collection=db.collection(this.collection);
             
-            // newUser.id = users.length + 1;
-            // users.push(newUser);
-  
             //insert the document
             await collection.insertOne(newUser);
             return newUser;
