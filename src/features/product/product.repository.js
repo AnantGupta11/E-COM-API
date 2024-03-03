@@ -66,17 +66,61 @@ class ProductRepository{
         }
     }
 
-    async rate(userID,productID,rating){
+        // async rate(userID, productID, rating){
+    //     try{
+    //         const db = getDB();
+    //         const collection = db.collection(this.collection);
+    //         // 1. Find the product
+    //         const product = await collection.findOne({_id:new ObjectId(productID)})
+    //         // 2. Find the rating
+           
+    //         const userRating = await product?.ratings?.find(r=>r.userID==userID);
+    //         if(userRating){
+    //         // 3. Update the rating
+    //         await collection.updateOne({
+    //             _id: new ObjectId(productID), "ratings.userID": new ObjectId(userID)
+    //         },{
+    //             $set:{
+    //                 "ratings.$.rating":rating
+    //             }
+    //         }
+    //         );
+    //         }else{
+    //             await collection.updateOne({
+    //                 _id:new ObjectId(productID)
+    //             },{
+    //                 $push: {ratings: {userID:new ObjectId(userID), rating}}
+    //             })
+    //         }
+    //     }catch(err){
+    //         console.log(err);
+    //         throw new ApplicationError("Something went wrong with database", 500);
+    //     }
+    // }
+
+    async rate(userID, productID, rating){
         try{
-            const db=getDB();
-            const collection=db.collection(this.collection);
-            collection.updateOne({_id:new ObjectId(productID)},
+            const db = getDB();
+            const collection = db.collection(this.collection);
+            
+            // 1. Removes existing entry
+            await collection.updateOne({
+                _id:new ObjectId(productID)
+            },
             {
-                $push:{ratings:{userID:new ObjectId(userID),rating}}
+                $pull:{ratings:{userID: new ObjectId(userID)}}
             })
+
+            // 2. Add new entry
+            await collection.updateOne({
+                _id:new ObjectId(productID)
+            },{
+                $push: {ratings: {userID:new ObjectId(userID), rating}}
+            })
+
         }catch(err){
             console.log(err);
-            throw new ApplicationError("Something went wrong with Database");
+            throw new ApplicationError("Something went wrong with database", 500);
         }
     }
 }

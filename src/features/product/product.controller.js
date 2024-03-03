@@ -33,13 +33,13 @@ export default class ProductController{
         }
         
     }
-    rateProduct(req,res,next){
+    async rateProduct(req,res,next){
         console.log(req.query);
         try{
             const userID=req.userID;
-            const productID=req.query.productID;
-            const rating=req.query.rating;
-                this.productRespository
+            const productID=req.body.productID;
+            const rating=req.body.rating;
+                await this.productRespository
                 .rate(userID,productID,rating);
                 //return res.status(400).send(err.message);
             return res
