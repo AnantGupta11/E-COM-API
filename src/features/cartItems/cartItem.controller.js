@@ -1,27 +1,44 @@
 import CartItemModel from "./cartItem.model.js";
-export class CartItemsController{
+import CartItemsRepository from "./cartItem.repository.js";
 
-    add(req,res){
-        //const { productID , quantity}=req.query;
-        const productID=req.query.productID;
-        const quantity=req.query.quantity;
-        const userID=req.userID;
-        console.log(userID);
-        CartItemModel.add(productID,userID,quantity);
-        res.status(201).send("Cart is updated");
+export class CartItemsController{
+    constructor(){
+        this.cartItemsRepository=new CartItemsRepository();
     }
-    get(req,res){
-        const userID=req.userID;
-        const items=CartItemModel.get(userID);
-        return res.status(200).send(items);
-    }
-    delete(req,res){
-        const userID=req.userID;
-        const cartItemID=req.params.id;
-        const error=CartItemModel.delete(cartItemID,userID);
-        if(error){
-            return res.status(404).send(error);
+    async add(req,res){
+        try{
+            const productID=req.body.productID;
+            const quantity=req.body.quantity;
+            const userID=req.userID;
+            await this.cartItemsRepository.add(productID,userID,quantity);
+            res.status(201).send("Cart is updated");
+        }catch(err){
+            console.log(err);
         }
-        return res.status(200).send("CartItem deleted from cart");
+        
+    }
+    async get(req,res){
+        try{
+            const userID=req.userID;
+            const items=await this.cartItemsRepository.get(userID);
+            return res.status(200).send(items);
+        }catch(err){
+            console.log(err);
+        }
+        
+    }
+    async delete(req,res){
+        try{
+            const userID=req.userID;
+            const cartItemID=req.params.id;
+            const isDeleted=this.cartItemsRepository.delete(cartItemID,userID);
+            if(!isDeleted){
+                return res.status(404).send("Item not found");
+            }
+            return res.status(200).send("CartItem deleted from cart");
+        }catch(err){
+            console.log(err);
+        }
+        
     }
 }
